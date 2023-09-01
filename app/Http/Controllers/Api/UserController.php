@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -15,19 +18,24 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-        return response()->json(['success' => 'true'], 200);
+        $user = auth()->user();
+        if(is_null($user)){
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }else{
+        $user = User::with('profile')->find($user->id);
+        return response()->json(['success' => true, 'data' => $user], 200);
     }
+}
 
     /**
      * Show the form for creating a new resource.
@@ -42,7 +50,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $user = auth()->user();
         if($user){
             $updateArray = [];
@@ -77,9 +84,35 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,$id)
     {
-        //
+        // dd($request->all(), $id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'phone' => "required|unique:users,phone,$id",
+            'pass_code' => 'required',
+            'referal_code' => "required|unique:users,referal_code,$id",
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $profile_pic = Null;
+        if ($request->hasFile('profile_pic')) {
+            $profile_pic = time() . '.' . $request->profile_pic->extension();
+            $request->profile_pic->move(public_path('storage/user/'.$id.'/profile') , $profile_pic);
+        }
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->pass_code = $request->pass_code;
+        $user->referal_code = $request->referal_code;
+        $user->save();
+        
+        $profile = Profile::where('user_id','=', $user->id)->first();
+        $profile->profile_pic =  $profile_pic;
+        $profile->save();
+
+        return response()->json(['success' => true, 'message' => "update data successfully.",'data' => [$user, 'profile' => $profile->profile_pic]], 200);
     }
 
     /**
@@ -89,4 +122,5 @@ class UserController extends Controller
     {
         //
     }
+
 }

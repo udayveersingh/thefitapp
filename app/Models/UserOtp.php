@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserIncomeSummary extends Model
+class UserOtp extends Model
 {
     protected $fillable = [
-        'user_id','credit_amount','debit_amount','transaction_type','transaction_date'
-      ];
+        'user_id','otp','expire_at'
+    ];
+    public $timestamps = false;
 }

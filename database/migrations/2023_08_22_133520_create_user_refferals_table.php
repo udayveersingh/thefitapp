@@ -16,8 +16,8 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('parent_id')->nullable();
-            $table->datetime('refferal_date')->nullable();
-            $table->double('reffaral_amount', 8, 2)->nullable();
+            $table->datetime('referral_date')->nullable();
+            $table->double('referral_amount', 8, 2)->nullable();
             $table->timestamps();
         });
     }

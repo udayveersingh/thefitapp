@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('pass_code')->nullable();
-            $table->string('refferal_code')->nullable();
+            $table->string('referal_code')->nullable();
             $table->string('device_id')->nullable();
             $table->string('device_type')->nullable();
             $table->enum('role',['admin','subscriber'])->default('subscriber');

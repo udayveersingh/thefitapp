@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'task_name','task_link','task_summary','task_start_date','task_end_date','status'
+    ];
 }

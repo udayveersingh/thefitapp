@@ -125,7 +125,7 @@
                                     fill="currentColor" />
                             </svg>
                             <span
-                                class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Task Module</span>
+                                class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Tasks</span>
                         </div>
                         <div class="rtl:rotate-180" :class="{ '!rotate-90': activeDropdown === 'Task_module' }">
 
@@ -138,7 +138,7 @@
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'Task_module'" x-collapse class="sub-menu text-gray-500">
                         <li>
-                            <a href="">Task List</a>
+                            <a href="{{route('task.index')}}">Task List</a>
                         </li>
                         <li>
                             <a href="">Task Reports</a>

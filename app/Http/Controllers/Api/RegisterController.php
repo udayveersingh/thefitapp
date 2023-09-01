@@ -35,26 +35,32 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             // 'email' => 'required|email',
-            // 'password' => 'required|string|min:6',
+            'user' => 'required',
             'pass_code' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $user = User::where('pass_code', '=', $request->input('pass_code'))->first();
-        if(empty($user)){
-            return response()->json(['error'=>'No user found.'], 404);
+        $user = User::where([
+            'email' => $request->input('user'),
+            'pass_code' => $request->input('pass_code'),
+        ])->first();
+        if(is_null($user)){
+            $user = User::where([
+                'phone' => $request->input('user'),
+                'pass_code' => $request->input('pass_code'),
+            ])->first();
+        }
+
+        if(is_null($user)){
+            return response()->json(["success"=> false, "message" =>'No user found.'], 404);
         }
         $token = JWTAuth::fromUser($user);
 
-        // if (!$token = auth()->attempt(['pass_code' => $user->pass_code , 'email' => $user->email])) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
         return response()->json([
             'success' => true,
             'data' => $user,
-            'access_token' => $token
-            
+            'access_token' => $token            
         ], 201);
 
         // if (!$token = auth()->attempt($validator->validated())) {
@@ -74,7 +80,7 @@ class RegisterController extends Controller
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'phone' => 'required',
-            // 'refferal_code' => 'required',
+            'refferal_code' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
@@ -83,18 +89,15 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            // 'password' => Hash::make(Str::random(10)),
             'refferal_code' => ($request->refferal_code) ? $request->refferal_code : null,
         ]);
-
-        $token = JWTAuth::fromUser($user);
+        
+        // $token = JWTAuth::fromUser($user);
         // $token = auth::attempt($newUser);
 
         return response()->json([
             'success' => true,
             'data' => $user,
-            'access_token' => $token
-
         ], 201);
     }
 
@@ -103,10 +106,10 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh()
-    {
-        return $this->createNewToken(auth()->refresh());
-    }
+    // public function refresh()
+    // {
+    //     return $this->createNewToken(auth()->refresh());
+    // }
 
 
 
@@ -127,15 +130,15 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
-    }
+    // protected function createNewToken($token)
+    // {
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth()->factory()->getTTL() * 60,
+    //         'user' => auth()->user()
+    //     ]);
+    // }
 
 
     public function show($id)

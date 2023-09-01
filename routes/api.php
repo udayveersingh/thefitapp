@@ -31,7 +31,14 @@ Route::group([
     Route::post('/refresh', [RegisterController::class, 'refresh']);
     Route::get('/user-profile', [RegisterController::class, 'userProfile']);  
 
-    
 });
 
-Route::resource('/users',App\Http\Controllers\Api\UserController::class);
+Route::Resource('/users',App\Http\Controllers\Api\UserController::class);
+Route::post('/user-update/{id}',[App\Http\Controllers\Api\UserController::class,'update']);
+Route::post('/create-otp',[App\Http\Controllers\Api\UserOtpController::class,'create']);
+Route::post('/verify-otp',[App\Http\Controllers\Api\UserOtpController::class,'verify']);
+Route::resource('/user-profile',App\Http\Controllers\Api\UserProfileController::class);
+Route::resource('/user-tracker',App\Http\Controllers\Api\UserTrackerController::class);
+Route::resource('/user-income-summary',App\Http\Controllers\Api\UserIncomeSummaryController::class);
+Route::resource('/user-task',App\Http\Controllers\Api\UserTaskController::class);
+

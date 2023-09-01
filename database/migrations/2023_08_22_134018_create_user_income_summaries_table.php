@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->double('credit_amount', 8, 2)->nullable();
             $table->double('debit_amount', 8, 2)->nullable();
-            $table->enum('income_type',['Refferal','StepTracker','WithDrawl'])->nullable();
-            $table->dateTime('income_date')->nullable();
+            $table->enum('transaction_type',['Refferal','StepTracker','WithDrawl'])->nullable();
+            $table->dateTime('transaction_date')->nullable();
             $table->timestamps();
         });
     }

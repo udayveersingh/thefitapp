@@ -13,7 +13,7 @@ class UserTracker extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-      'user_id','step_count','step_count_date','reward_amount'
+      'user_id','step_count','step_count_date','reward_amount','calories','miles','move_min'
     ];
 
 }

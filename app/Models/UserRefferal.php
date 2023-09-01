@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserRefferal extends Model
 {
-    use HasFactory;
+       protected $fillable = ['user_id','parent_id','referal_date','referal_amount'];
 }
